@@ -28,7 +28,7 @@ function SearchProvider({ children }) {
   }
   function handleCitySelect(zoneId, zoneName) {
     setCurrentZone({ zoneId, zoneName });
-    router.push("/services");
+    router.push("/");
   }
   return (
     <SearchContext.Provider

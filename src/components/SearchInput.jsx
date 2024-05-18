@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { CgClose } from "react-icons/cg";
 
-const SearchInput = ({ serviceList, setServiceList }) => {
+const SearchInput = ({ serviceList, setServiceList, placeholder }) => {
   const [inputValue, setInputValue] = useState("");
   const handleSearchInputChange = (e) => setInputValue(e.currentTarget.value);
 
@@ -13,14 +13,11 @@ const SearchInput = ({ serviceList, setServiceList }) => {
 
   useEffect(() => {
     let trimmedValue = inputValue.trim();
-
-    setServiceList((_) => {
-      if (trimmedValue === "") {
-        return serviceList;
-      } else {
-        return serviceList.filter((s) => s.name.includes(trimmedValue));
-      }
-    });
+    setServiceList(
+      trimmedValue === ""
+        ? serviceList
+        : serviceList.filter((s) => s.name.includes(trimmedValue))
+    );
   }, [inputValue]);
 
   return (
@@ -31,7 +28,7 @@ const SearchInput = ({ serviceList, setServiceList }) => {
           className="absolute outline-none text-gray-700 w-full"
           value={inputValue}
           onChange={handleSearchInputChange}
-          placeholder="به چه خدمتی نیاز دارید؟"
+          placeholder={placeholder}
         />
       </div>
       <span className="z-10" onClick={handleClearClick}>

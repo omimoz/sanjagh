@@ -1,5 +1,5 @@
 import React from "react";
-import { getHeaderText } from "../static/getHeader";
+import { getHeaderText } from "../utils/getHeader";
 import { FaAngleRight } from "react-icons/fa6";
 const Header = ({ searchType, onBackButtonClick }) => {
   const header = getHeaderText(searchType);

@@ -1,40 +1,16 @@
-"use client"
-import { SearchContext } from "@/src/context/SearchProvider";
+//this page load ssg
+import SearchInput from "@/src/components/SearchInput";
+import { fetchCities } from "@/src/data/Api";
 import Layout from "@/src/layout";
-import { useContext, useEffect, useState } from "react";
+import { updateView } from "@/src/utils/filterZones";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 
-const CitySearch = () => {
-  const { handleCitySelect } = useContext(SearchContext);
-  const [inputValue, setInputValue] = useState("");
-  const [filteredZoneList, setFilteredZoneList] = useState([]);
-  const [zoneList, setZoneList] = useState([]);
-
-  const handleInputChange = (e) => {
-    let value = e.currentTarget.value;
-    let trimmedValue = value.trim();
-
-    setFilteredZoneList((_) => {
-      if (trimmedValue === "") {
-        return zoneList;
-      } else {
-        return zoneList.filter((z) => z.name.includes(trimmedValue));
-      }
-    });
-
-    setInputValue((_) => value);
-  };
-
-  useEffect(() => {
-    fetch("/api/zones")
-      .then((res) => res.json())
-      .then((zoneList) => {
-        setZoneList(zoneList);
-        setFilteredZoneList(zoneList);
-      })
-      .catch((e) => console.log(e));
-  }, []);
-
+const CitySearch = ({ zoneList }) => {
+  let filterzoneList = zoneList;
+  function handleFilterZone(newValue) {
+    filterzoneList = newValue;
+    updateView(filterzoneList); //function to filter zones
+  }
   return (
     <Layout>
       <div className="flex items-center border rounded-lg border-gray-200 p-3">
@@ -43,26 +19,29 @@ const CitySearch = () => {
           size="1.2rem"
           color="#D3D4D5"
         />
-        <input
+        <SearchInput
           type="text"
           className="outline-none text-gray-700"
-          value={inputValue}
-          onChange={handleInputChange}
+          serviceList={filterzoneList}
+          setServiceList={handleFilterZone}
           placeholder="جستجوی شهر"
         />
       </div>
-      <div className="overflow-auto mt-3 max-h-[750px] scrollbar-minimal">
-        {filteredZoneList.map(({ id, name }) => (
-          <div
-            key={id}
-            onClick={() => handleCitySelect(id, name)}
-            className="border-b border-b-gray-100 text-gray-500 py-3 px-2 cursor-pointer hover:bg-[#E5F1FF]"
-          >
-            <span>{name}</span>
-          </div>
-        ))}
-      </div>
+      <div
+        id="zoneListContainer"
+        className="overflow-auto mt-3 max-h-[750px] scrollbar-minimal"
+      ></div>
     </Layout>
   );
 };
+
+export async function getStaticProps() {
+
+  const zoneList = await fetchCities();
+  return {
+    props: {
+      zoneList,
+    },
+  };
+}
 export default CitySearch;
