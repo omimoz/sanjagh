@@ -1,4 +1,3 @@
-import SearchProvider from '@/src/context/SearchProvider';
 import '@/styles/globals.css'
 import localFont from 'next/font/local';
 
@@ -14,5 +13,5 @@ export const vazirmatn = localFont({
 });
 
 export default function App({ Component, pageProps }) {
-  return <SearchProvider><Component {...pageProps} /></SearchProvider>
+  return <Component {...pageProps} />
 }

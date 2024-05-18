@@ -1,14 +1,10 @@
 "use client";
-import React, { useContext, useEffect } from "react";
-import Header from "./Header";
+import React, { useEffect } from "react";
 import useBack from "../hooks/useBack";
-import { SearchContext } from "../context/SearchProvider";
 import { useRouter } from "next/router";
-
+import { FaAngleRight } from "react-icons/fa6";
 function Layout({ children, navText }) {
   const { back } = useBack();
-  const { getSearchType } = useContext(SearchContext);
-  const searchType = getSearchType();
   const { pathname, replace } = useRouter();
   function changeRoute() {
     replace(`/${window.location.search}`);
@@ -36,7 +32,11 @@ function Layout({ children, navText }) {
           {navText}
         </div>
         {pathname !== "/" && (
-          <Header onBackButtonClick={back} searchType={searchType} />
+          <div className="relative flex items-center justify-center py-6">
+            <button className="absolute right-2" onClick={back}>
+              <FaAngleRight size="22" />
+            </button>
+          </div>
         )}
       </div>
       <div className="px-3"> {children} </div>
